@@ -1,0 +1,155 @@
+create database laboratorioI -- Crear la base de datos llamada laboratorioI
+use laboratorioI -- Seleccionar la base de datos laboratorioI para trabajar
+
+-- Tabla: direccion
+CREATE TABLE direccion (
+    idDireccion INT(11) PRIMARY KEY, -- Clave primaria única para cada dirección
+    Direccion VARCHAR(45),  -- Crea el campo para direccion tipo cadena de texto 
+    Ciudad VARCHAR(45),  -- Crea el campo para ciudad tipo cadena de texto 
+    Pais VARCHAR(45)    -- Crea el campo para pais tipo cadena de texto 
+);
+-- Tabla: cliente
+CREATE TABLE cliente (
+    idCliente INT(11) PRIMARY KEY ,-- Clave primaria única para cada cliente 
+    Nombre VARCHAR(45), -- Crea el campo para nombre tipo cadena de texto 
+    Apellido VARCHAR(45), -- Crea el campo para apellido tipo cadena de texto 
+    Edad INT(11),-- Crea el campo para edad tipo entero
+    Direccion_idDireccion INT(11),  -- Relaciona la tabla direccion
+    FOREIGN KEY (Direccion_idDireccion) REFERENCES direccion(idDireccion)
+    -- Esta llave foránea asegura que cada cliente tenga una dirección válida registrada en la tabla direccion
+);
+-- Tabla: categoria
+CREATE TABLE categoria (
+    idCategoria INT(11) PRIMARY KEY, -- Clave primaria única para cada categoria
+    Nombre VARCHAR(45) -- Crea el campo para nombre tipo cadena de texto 
+);
+-- Tabla: peliculas
+CREATE TABLE peliculas (
+    idPeliculas INT(11) PRIMARY KEY , -- Clave primaria única para cada pelicula
+    Nombre VARCHAR(45), -- Crea el campo para nombre tipo cadena de texto 
+    Duracion INT(11), -- Crea el campo para duracion tipo entero
+    Descripcion TEXT, -- Crea el campo para descripcion tipo cadena de texto largo
+    Ano INT(11), -- Crea el campo para año tipo entero
+    Categoria_idCategoria INT(11), -- Relaciona la tabla categoria
+    FOREIGN KEY (Categoria_idCategoria) REFERENCES categoria(idCategoria)  
+    -- Esta llave foránea asegura que cada película pertenezca a una categoría existente
+);
+-- Tabla: inventario
+CREATE TABLE inventario (
+    idCopiasPeliculas INT(11) PRIMARY KEY, -- Clave primaria única para cada copia de pelicula
+    Peliculas_idPeliculas INT(11), -- Relación con película
+    Disponible TINYINT(1), -- Crea el campo para disponible tipo booleano 
+    FOREIGN KEY (Peliculas_idPeliculas) REFERENCES peliculas(idPeliculas)  
+    -- Esta llave foránea vincula cada copia del inventario con una película específica
+);
+-- Tabla: renta
+CREATE TABLE rentas (
+    idRenta INT(11) PRIMARY KEY, -- Clave primaria única para cada renta
+    Fecha_Renta DATE, -- Crea el campo fecha renta tipo fecha
+    Fecha_Entrega DATE,-- Crea el campo fecha entrega tipo fecha
+    Inventario_idCopiasPeliculas INT(11), -- Relación con inventario
+    Cliente_idCliente INT(11),-- Relación con cliente
+    FOREIGN KEY (Inventario_idCopiasPeliculas) REFERENCES inventario(idCopiasPeliculas),
+    -- Esta llave foránea indica qué copia fue rentada
+    FOREIGN KEY (Cliente_idCliente) REFERENCES cliente(idCliente)
+    -- Esta llave foránea indica quién hizo la renta
+);
+
+-- Insertar datos en la tabla direccion
+INSERT INTO direccion (idDireccion, Direccion, Ciudad, Pais) VALUES
+(1,'21 Calle 3-17 ', 'Nueva York', 'Estados Unidos'), -- Se ingresan los datos en la fila 1 de la tabla direccion
+(2,'20 Calle 3-12', 'Buenos Aires', 'Argentina'),-- Se ingresan los datos en la fila 2 de la tabla direccion
+(3,'19 Calle 4-11', 'Lima', 'Peru'),-- Se ingresan los datos en la fila 3 de la tabla direccion
+(4,'18 Calle 3-14', 'Bogotá', 'Colombia'),-- Se ingresan los datos en la fila 4 de la tabla direccion
+(5,'17 Calle 4-13', 'Santiago', 'Chile');-- Se ingresan los datos en la fila 5 de la tabla direccion
+
+-- Insertar datos en la tabla cliente
+INSERT INTO cliente (idCliente, Nombre, Apellido, Edad, Direccion_idDireccion) VALUES
+(1,'Ana', 'Pérez', 25, 1), -- Se ingresan los datos en la fila 1 de la tabla cliente
+(2, 'Juan', 'González', 30, 2),-- Se ingresan los datos en la fila 2 de la tabla cliente
+(3, 'Juliana', 'Vargas', 28, 3),-- Se ingresan los datos en la fila 3 de la tabla cliente
+(4, 'Carlos', 'López', 35, 4),-- Se ingresan los datos en la fila 4 de la tabla cliente
+(5, 'Sofía', 'Martínez', 22, 5);-- Se ingresan los datos en la fila 5 de la tabla cliente
+
+-- Insertar datos en la tabla categoria
+INSERT INTO categoria (idCategoria, Nombre) VALUES
+(1, 'Acción'), -- Se ingresan los datos en la fila 1 de la tabla categoria
+(2, 'Comedia'),-- Se ingresan los datos en la fila 2 de la tabla categoria
+(3, 'Drama'),-- Se ingresan los datos en la fila 3 de la tabla categoria
+(4, 'Ciencia Ficción'),-- Se ingresan los datos en la fila 4 de la tabla categoria
+(5, 'Terror');-- Se ingresan los datos en la fila 5 de la tabla categoria
+
+-- Insertar datos en la tabla peliculas
+INSERT INTO peliculas (idPeliculas, Nombre, Duracion, Descripcion, Ano, Categoria_idCategoria) VALUES
+(1, 'POKEMON1', 120, 'Película de acción', 2023, 1), -- Se ingresan los datos en la fila 1 de la tabla peliculas
+(2, 'Una noche en el museo', 108, 'Película de comedia', 2006, 2),-- Se ingresan los datos en la fila 2 de la tabla peliculas
+(3, 'El diario de una pasión', 123, 'Película de drama romántico', 2004, 3),-- Se ingresan los datos en la fila 3 de la tabla peliculas
+(4, 'Interestelar', 169, 'Película de ciencia ficción', 2014, 4),-- Se ingresan los datos en la fila 4 de la tabla peliculas
+(5, 'El conjuro', 112, 'Película de terror', 2013, 5);-- Se ingresan los datos en la fila 5 de la tabla peliculas
+
+-- Insertar datos en la tabla inventario
+INSERT INTO inventario (idCopiasPeliculas, Peliculas_idPeliculas, Disponible) VALUES
+(1, 1, 1), -- Se ingresan los datos en la fila 1 de la tabla inventario
+(2, 2, 1), -- Se ingresan los datos en la fila 2 de la tabla inventario
+(3, 3, 0), -- Se ingresan los datos en la fila 3 de la tabla inventario
+(4, 4, 1),-- Se ingresan los datos en la fila 4 de la tabla inventario
+(5, 5, 1);-- Se ingresan los datos en la fila 5 de la tabla inventario 
+
+-- Insertar datos en la tabla renta
+INSERT INTO rentas (idRenta, Fecha_Renta, Fecha_Entrega, Inventario_idCopiasPeliculas, Cliente_idCliente) VALUES
+(1, '2025-05-20', '2025-07-23', 1, 1), -- Se ingresan los datos en la fila 1 de la tabla rentas 
+(2, '2025-06-25', '2025-08-27', 2, 2),-- Se ingresan los datos en la fila 2 de la tabla rentas 
+(3, '2025-07-22', '2025-09-30', 3, 3), -- Se ingresan los datos en la fila 3 de la tabla rentas 
+(4, '2025-08-21', '2025-010-25', 4, 4),-- Se ingresan los datos en la fila 4 de la tabla rentas 
+(5, '2025-09-23', '2025-011-24', 5, 5); -- Se ingresan los datos en la fila 5 de la tabla rentas 
+
+SELECT * FROM direccion;-- Se ven la tabla direccion 
+SELECT * FROM cliente;-- Se ve la tabla cliente
+SELECT * FROM categoria;-- Se ve la tabla categoria
+SELECT * FROM peliculas;-- Se ve la tabla peliculas 
+SELECT * FROM inventario;-- Se ve la tabla inventario 
+SELECT * FROM rentas;-- Se ve la tabla rentas
+
+-- Consulta el nombre Juliana 
+SELECT * FROM cliente WHERE Nombre = 'Juliana';
+-- Borrar las peliculas con nombre POKEMON1
+DELETE FROM peliculas WHERE Nombre = 'POKEMON1';
+-- Ordenar categoria de manera ascendente 
+SELECT * FROM categoria ORDER BY Nombre ASC;
+-- Ordenat peliculas de manera descendente 
+SELECT * FROM peliculas ORDER BY Ano DESC;
+
+-- Tabla: pagos
+CREATE TABLE pagos (
+    idPago INT(11) PRIMARY KEY, -- Clave primaria única para cada pago
+    Renta_idRenta INT(11), -- Relación con la tabla renta
+    Fecha_Pago DATE, -- Crea el campo para fecha pago tipo fecha
+    Monto DECIMAL(10, 2),-- Crea el campo para monto tipo decimal 
+    Forma_Pago VARCHAR(45), -- Crea el campo para forma pago tipo cadena de texto
+    FOREIGN KEY (Renta_idRenta) REFERENCES rentas(idRenta)
+    -- Esta llave foránea asegura que el pago se asocie a una renta válida
+);
+-- Insertar datos en la tabla clasificaciones
+CREATE TABLE clasificaciones (
+    idClasificacion INT(11) PRIMARY KEY, -- Clave primaria única para cada clasificacion
+    Nombre VARCHAR(10), -- Crea el campo para nombre tipo cadena de texto 
+    Descripcion VARCHAR(255) -- Crea el campo para descripcion tipo cadena de texto 
+);
+
+-- Insertar datos en la tabla pagos
+INSERT INTO pagos (idPago, Renta_idRenta, Fecha_Pago, Monto, Forma_Pago) VALUES
+(1, 1, '2025-04-23', 3.50, 'Efectivo'), -- Se ingresan los datos en la fila 1 de la tabla pagos
+(2, 2, '2025-04-24', 7.00, 'Tarjeta de Crédito'),-- Se ingresan los datos en la fila 2 de la tabla pagos
+(3, 4, '2025-04-25', 3.50, 'Efectivo'),-- Se ingresan los datos en la fila 3 de la tabla pagos
+(4, 5, '2025-04-26', 7.00, 'Transferencia Bancaria'),-- Se ingresan los datos en la fila 4 de la tabla pagos
+(5, 3, '2025-04-27', 4.00, 'Tarjeta de Débito');-- Se ingresan los datos en la fila 5 de la tabla pagos
+-- Insertar datos en la tabla clasificaciones
+INSERT INTO clasificaciones (idClasificacion, Nombre, Descripcion) VALUES
+(1, 'G', 'Apto para todas las edades'),-- Se ingresan los datos en la fila 1 de la tabla clasificaciones
+(2, 'PG', 'Se recomienda la guía de los padres'),-- Se ingresan los datos en la fila 2 de la tabla clasificaciones
+(3, 'PG-13', 'Algunos materiales pueden no ser adecuados para niños menores de 13 años'),-- Se ingresan los datos en la fila 3 de la tabla clasificaciones
+(4, 'R', 'Contenido restringido, menores de 17 años requieren acompañamiento de un adulto'),-- Se ingresan los datos en la fila 4 de la tabla clasificaciones
+(5, 'NC-17', 'No apto para menores de 17 años'); -- Se ingresan los datos en la fila 5 de la tabla clasificaciones
+
+SELECT * FROM pagos;-- Se ven la tabla pagos
+SELECT * FROM clasificaciones;-- Se ven la tabla clasificaciones
